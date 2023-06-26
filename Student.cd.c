@@ -9,8 +9,8 @@ enum Cinsiyet {Erkek = 1, kadin};
 struct ogrenci {
     size_t TCKN;
     enum Sube sube;
-    char Adi[20];
-    char Soyadi[20];
+    char Adi[50];
+    char Soyadi[50];
     enum Cinsiyet cinsiyet;
     float DersOrtalamasi;
 };
@@ -39,7 +39,8 @@ int main() {
     int karar;
     do {
         printf("lutfen TCKN, Sube, Adi, Soyadi, Cinsiyet( Erkek=1,Kadin=2), Ders Ortalamasi sekleide enter basarak giriniz:");
-        scanf("%ld %d %s %s %d %f", &DiziOgrenci.TCKN, &DiziOgrenci.sube,&DiziOgrenci.Adi,
+        getchar();
+        scanf("%ld %d %[^\n]%*c %s %d %f", &DiziOgrenci.TCKN, &DiziOgrenci.sube,&DiziOgrenci.Adi,
               &DiziOgrenci.Soyadi, &DiziOgrenci.cinsiyet, &DiziOgrenci.DersOrtalamasi);
         printf("------------------\n");
         printf("Devam etmek istiyor musunuz (e/E veya h/H)?");

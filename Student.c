@@ -40,8 +40,8 @@ int main() {
     do {
         printf("lutfen TCKN, Sube, Adi, Soyadi, Cinsiyet( Erkek=1,Kadin=2), Ders Ortalamasi sekleide enter basarak giriniz:");
         getchar();
-        scanf("%ld %d %[^\n]%*c %s %d %f", &DiziOgrenci.TCKN, &DiziOgrenci.sube,&DiziOgrenci.Adi,
-              &DiziOgrenci.Soyadi, &DiziOgrenci.cinsiyet, &DiziOgrenci.DersOrtalamasi);
+        scanf("%zu %d %[^\n]%*c %s %d %f", &DiziOgrenci.TCKN, &DiziOgrenci.sube,DiziOgrenci.Adi,
+              DiziOgrenci.Soyadi, &DiziOgrenci.cinsiyet, &DiziOgrenci.DersOrtalamasi);
         printf("Devam etmek istiyor musunuz (e/E veya h/H)?");
         scanf(" %c", &karar);
         BilgiYaz(DiziOgrenci);
@@ -65,7 +65,7 @@ void BilgiYaz(struct ogrenci ogr) {
         printf("Dosya olusturulamadi");
         exit(1);
     }
-    fprintf(file, "%ld %d %s %s %d %f\n", ogr.TCKN, ogr.sube, ogr.Adi, ogr.Soyadi, ogr.cinsiyet, ogr.DersOrtalamasi);
+    fprintf(file, "%zu %d %s %s %d %f\n", ogr.TCKN, ogr.sube, ogr.Adi, ogr.Soyadi, ogr.cinsiyet, ogr.DersOrtalamasi);
     fclose(file);
 }
 
@@ -80,7 +80,8 @@ struct ogrenci BilgiOku(int sube) {
     struct ogrenci ogr;
     eyp.DersOrtalamasi = -1;
     while (!feof(file)) {
-        fscanf(file, "%ld %d %s %s %d %f", &ogr.TCKN, &ogr.sube, ogr.Adi, ogr.Soyadi, &ogr.cinsiyet, &ogr.DersOrtalamasi);
+        getchar();
+        fscanf(file, "%zu %d %[^\n]%*c %s %d %f", &ogr.TCKN, &ogr.sube, ogr.Adi, ogr.Soyadi, &ogr.cinsiyet, &ogr.DersOrtalamasi);
         if (ogr.sube == sube) {
             if (ogr.DersOrtalamasi > eyp.DersOrtalamasi) {
                 eyp = ogr;
@@ -90,8 +91,6 @@ struct ogrenci BilgiOku(int sube) {
     fclose(file);
     return eyp;
 }
-
-
 void sonucuYaz(float arr[], int size, int sube) {
     float DiziOrtalamalari[10];
     FILE* file = fopen("ogrenci.db", "rb");
@@ -101,9 +100,12 @@ void sonucuYaz(float arr[], int size, int sube) {
     }
     struct ogrenci ogr;
     int i = 0;
-    while (fscanf(file, "%zu %d %s %s %d %f", &ogr.TCKN, (int*)&ogr.sube, ogr.Adi, ogr.Soyadi, (int*)&ogr.cinsiyet, &ogr.DersOrtalamasi) == 6) {
-        if (ogr.sube == sube) {
-            DiziOrtalamalari[i++] = ogr.DersOrtalamasi;
+    while (!feof(file)) {
+        getchar();
+        if (fscanf(file, "%zu %d %[^\n]%*c %s %d %f", &ogr.TCKN, (int*)&ogr.sube, ogr.Adi, ogr.Soyadi, (int*)&ogr.cinsiyet, &ogr.DersOrtalamasi) == 6) {
+            if (ogr.sube == sube) {
+                DiziOrtalamalari[i++] = ogr.DersOrtalamasi;
+            }
         }
     }
     fclose(file);
@@ -115,9 +117,9 @@ void sonucuYaz(float arr[], int size, int sube) {
             Ueyp = Ieup;
             Ieup = eyp;
             eyp = DiziOrtalamalari[j];
-        }else if (DiziOrtalamalari[j] > Ieup) {
+        } else if (DiziOrtalamalari[j] > Ieup) {
             Ieup = DiziOrtalamalari[j];
-        }else if (DiziOrtalamalari[j] > Ueyp) {
+        } else if (DiziOrtalamalari[j] > Ueyp) {
             Ueyp = DiziOrtalamalari[j];
         }
     }

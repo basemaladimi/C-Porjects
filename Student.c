@@ -80,8 +80,7 @@ struct ogrenci BilgiOku(int sube) {
     struct ogrenci ogr;
     eyp.DersOrtalamasi = -1;
     while (!feof(file)) {
-        getchar();
-        fscanf(file, "%zu %d %[^\n]%*c %s %d %f", &ogr.TCKN, &ogr.sube, ogr.Adi, ogr.Soyadi, &ogr.cinsiyet, &ogr.DersOrtalamasi);
+        fscanf(file, "%zu %d %s %s %d %f", &ogr.TCKN, &ogr.sube, ogr.Adi, ogr.Soyadi, &ogr.cinsiyet, &ogr.DersOrtalamasi);
         if (ogr.sube == sube) {
             if (ogr.DersOrtalamasi > eyp.DersOrtalamasi) {
                 eyp = ogr;
@@ -101,8 +100,7 @@ void sonucuYaz(float arr[], int size, int sube) {
     struct ogrenci ogr;
     int i = 0;
     while (!feof(file)) {
-        getchar();
-        if (fscanf(file, "%zu %d %[^\n]%*c %s %d %f", &ogr.TCKN, (int*)&ogr.sube, ogr.Adi, ogr.Soyadi, (int*)&ogr.cinsiyet, &ogr.DersOrtalamasi) == 6) {
+        if (fscanf(file, "%zu %d %s %s %d %f", &ogr.TCKN, (int*)&ogr.sube, ogr.Adi, ogr.Soyadi, (int*)&ogr.cinsiyet, &ogr.DersOrtalamasi) == 6) {
             if (ogr.sube == sube) {
                 DiziOrtalamalari[i++] = ogr.DersOrtalamasi;
             }

@@ -9,16 +9,16 @@ enum Cinsiyet {Erkek = 1, kadin};
 struct ogrenci {
     size_t TCKN;
     enum Sube sube;
-    char Adi[50];
-    char Soyadi[50];
+    char Adi[20];
+    char Soyadi[20];
     enum Cinsiyet cinsiyet;
     float DersOrtalamasi;
 };
 
 
-void BilgiYaz(struct ogrenci); // Öğrenci bilgilerini bir dosyaya yazmak için kullanılan fonksiyon
-struct ogrenci BilgiOku(int); // Verilen sınıftaki en yüksek ortalama notu olan öğrenciyi bir dosyadan okuyan fonksiyon
-void sonucuYaz(float[], int, int); // Verilen sınıftaki ikinci ve üçüncü en yüksek notları hesaplayıp bir diziye kaydeden fonksiyon
+void BilgiYaz(struct ogrenci); //Öğrenci bilgileri bir dosyaya yazmak için kullanılan fonksiyon
+struct ogrenci BilgiOku(int); // Verilen sınıddtaki en yüsek ortalama notu olan öğrenciyi bir dosyadan okuyan fonksiyon
+void sonucuYaz(float[], int, int); // verilen sınıftaki ikinci ve üçüncü en yüksek notları hesaplayıp bir disiye kaydeden fonksiyon
 
 
 int main() {
@@ -36,13 +36,12 @@ int main() {
             exit(1);
         }
     }
-    int karar;
+    char karar;
     do {
         printf("lutfen TCKN, Sube, Adi, Soyadi, Cinsiyet( Erkek=1,Kadin=2), Ders Ortalamasi sekleide enter basarak giriniz:");
         getchar();
         scanf("%ld %d %[^\n]%*c %s %d %f", &DiziOgrenci.TCKN, &DiziOgrenci.sube,&DiziOgrenci.Adi,
               &DiziOgrenci.Soyadi, &DiziOgrenci.cinsiyet, &DiziOgrenci.DersOrtalamasi);
-        printf("------------------\n");
         printf("Devam etmek istiyor musunuz (e/E veya h/H)?");
         scanf(" %c", &karar);
         BilgiYaz(DiziOgrenci);
@@ -51,11 +50,11 @@ int main() {
         struct ogrenci eyp;
         eyp = BilgiOku(i + 1);
         printf("\n%d. subesindeki %s %s (%s olan) en yuksek puani: %.2f\n", i + 1, eyp.Adi, eyp.Soyadi, (eyp.cinsiyet == 1) ? "Erkek" : "Kadin", eyp.DersOrtalamasi);
-        float ivueup[2];
-        sonucuYaz(ivueup, 2, i + 1);
-        printf("%d. subesindeki ikinci en yuksek puani: %.2f\n", i + 1, ivueup[0]);
-        printf("%d. subesindeki ucuncu en yuksek puani: %.2f\n", i + 1, ivueup[1]);
     }
+    float ivueup[2];
+    sonucuYaz(ivueup, 2,   1);
+    printf("%d. subesindeki ikinci en yuksek puani: %.2f\n", 1, ivueup[0]);
+    printf("%d. subesindeki ucuncu en yuksek puani: %.2f\n",   1, ivueup[1]);
     return 0;
 }
 
@@ -95,15 +94,14 @@ struct ogrenci BilgiOku(int sube) {
 
 void sonucuYaz(float arr[], int size, int sube) {
     float DiziOrtalamalari[10];
-    FILE *file = fopen("ogrenci.db", "rb");
+    FILE* file = fopen("ogrenci.db", "rb");
     if (file == NULL) {
         printf("Dosya okunamadi!");
         exit(1);
     }
     struct ogrenci ogr;
     int i = 0;
-    while (!feof(file)) {
-        fscanf(file, "%ld %d %s %s %d %f", &ogr.TCKN, &ogr.sube, ogr.Adi, ogr.Soyadi, &ogr.cinsiyet, &ogr.DersOrtalamasi);
+    while (fscanf(file, "%zu %d %s %s %d %f", &ogr.TCKN, (int*)&ogr.sube, ogr.Adi, ogr.Soyadi, (int*)&ogr.cinsiyet, &ogr.DersOrtalamasi) == 6) {
         if (ogr.sube == sube) {
             DiziOrtalamalari[i++] = ogr.DersOrtalamasi;
         }
@@ -117,13 +115,14 @@ void sonucuYaz(float arr[], int size, int sube) {
             Ueyp = Ieup;
             Ieup = eyp;
             eyp = DiziOrtalamalari[j];
-        } else if (DiziOrtalamalari[j] > Ieup) {
-            Ueyp = Ieup;
+        }else if (DiziOrtalamalari[j] > Ieup) {
             Ieup = DiziOrtalamalari[j];
-        } else if (DiziOrtalamalari[j] > Ueyp) {
+        }else if (DiziOrtalamalari[j] > Ueyp) {
             Ueyp = DiziOrtalamalari[j];
         }
     }
-    if (size > 0) arr[0] = Ieup;
-    if (size > 1) arr[1] = Ueyp;
+    if (size > 0)
+        arr[0] = (Ieup != -1) ? Ieup : 0;
+    if (size > 1)
+        arr[1] = (Ueyp != -1) ? Ueyp : 0;
 }
